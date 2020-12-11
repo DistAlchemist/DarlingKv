@@ -5,7 +5,7 @@ from darlingkv.config import netconfig
 from darlingkv.net import gossip
 from darlingkv.net import rpc
 from darlingkv.net import hashring
-
+from darlingkv.failure import migrate
 
 
 class CommunicateServer:
@@ -26,6 +26,7 @@ class CommunicateServer:
     def registerFunction(self):
         self.handler.register(self.gossip.distributeInfo)
         self.handler.register(hashring.registerRing)
+        self.handler.register(migrate.migrate)
     
     def waitRequest(self):
         rpc.rpcServer(self.handler, ('localhost', self.port))

@@ -27,9 +27,8 @@ class Gossip:
         for ringNode in ringNodes:
             if not ping(ringNode.endpoint.address):
                 # process host failure
-                self.ring.removeNode(ringNode)
                 failure.failureHandle(ringNode)
-            serialNodes = self.pull(ringNodel.endpoint)
+            serialNodes = self.pull(ringNode.endpoint)
 
             self.mergeInfo(serialNodes)
 

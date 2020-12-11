@@ -46,8 +46,7 @@ class HashRing:
 
     def randomKNodes(self, k):
         k           = min(k, self.activeNodeNum())
-        nodes       = random.choices(self.activeNodes, k=k)
-        return nodes
+        return random.choices(self.activeNodes, k=k)
 
     def sequentialKNodes(self, key, k):
         keyLoc      = strHash(key) % self.ringSize
@@ -60,6 +59,10 @@ class HashRing:
     
     def serialize(self):
         return [v.serialize() for k, v in self.totalNodes.items()]
+
+    def deserlize(self):
+        # maybe a deserialize method is needed
+        pass
 
     # This method is aborted
     def joinRing(self):
@@ -138,6 +141,20 @@ class HashRing:
                     tNode.state = 'inactive'
                     nodeIndex   = self.findTargetNode(tNode.token)
                     self.activeNodes.pop(nodeIndex)
+    
+    def nodeScope(self, node):
+        nodeIndex   = self.findTargetNode(node.token)
+        preIndex    = (nodeIndex - 1 + self.activeNodeNum()) % self.activeNodeNum()
+
+        return (self.activeNodes[preIndex].token, node.token)
+
+    def offsetNode(self, node, offset):
+        nodeIndex = self.findTargetNode(node.token)
+        if self.activeNodes[nodeIndex].token != node.token:
+            return None
+
+        targetNodeIndex = (nodeIndex + offset + self.activeNodeNum()) % self.activeNodeNum()
+        return self.activeNodes[targetNodeIndex]
 
     def findTargetNode(self, token):
         return binarySearch(self.activeNodes, token, lambda a, b: a.token < b)

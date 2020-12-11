@@ -1,6 +1,7 @@
 import os
 import sys
 
+from darlingkv.common.hash import strHash
 from darlingkv.common.singleton import Singleton
 
 class  StorageEngine:
@@ -22,6 +23,8 @@ class  StorageEngine:
     def keys(self):
         return list(self.memTable)
 
-    def allKeyValue(self):
-        return self.memTable
+    def kvInScope(self, scope):
+        s, t = scope[0], scope[1]
+        kv = [k, v for k, v in self.memTable if strHash(k) in range(s, t)]
+        return kv
 

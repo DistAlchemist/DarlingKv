@@ -32,7 +32,6 @@ def rpcServer(handler, address):
         t.daemon = True
         t.start()
 
-
 # RPC client
 class RPCProxy:
     def __init__(self, connection):

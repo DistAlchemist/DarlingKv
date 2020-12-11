@@ -34,6 +34,7 @@ def rackUnAwareReplica(key, value, timestamp, n):
 def rackAwareReplica(key, value, timestamp, n):
     pass
 
+################################################################
 @Singleton
 class Replica:
     def __init__(self):

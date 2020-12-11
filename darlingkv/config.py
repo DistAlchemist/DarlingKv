@@ -6,6 +6,7 @@ DataBasePath = '/root/db/'
 ConfigFile = 'config/config'
 LogPath = 'log/'
 
+
 @Singleton
 class GUIConfig:
     def __init__(self, dbpath = DataBasePath):
