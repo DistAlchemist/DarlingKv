@@ -45,7 +45,7 @@ class HashRing:
         return len(self.activeNodes)
 
     def randomKNodes(self, k):
-        k           = min(k, self.nodeNum())
+        k           = min(k, self.activeNodeNum())
         nodes       = random.choices(self.activeNodes, k=k)
         endpoints   = list(map(lambda node: node.endpoint, nodes))
         return endpoints
@@ -94,7 +94,6 @@ class HashRing:
         token = hash(serialEndPoint) % self.ringSize
         while token in self.totalNodes:
             token = hash(token + random.randint(10)) % self.ringSize
-        
 
         newNode = RingNode(serialEndPoint['address'],
                            serialEndPoint['storePort'],

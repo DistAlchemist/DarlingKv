@@ -52,3 +52,4 @@ class NetConfig:
 
 guiconfig = GUIConfig()
 netconfig = NetConfig()
+repconfig = ReplicaConfig()

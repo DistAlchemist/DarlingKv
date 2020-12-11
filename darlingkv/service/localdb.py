@@ -21,6 +21,7 @@ class StorageServer:
         rpc.rpcServer(self.handler, ('localhost', self.port))
 
     def registerFunction(self):
+        self.handler.register(self.db.allKeyValue)
         self.handler.register(self.db.delete)
         self.handler.register(self.db.exists)
         self.handler.register(self.db.get)
