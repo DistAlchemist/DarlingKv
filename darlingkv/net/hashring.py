@@ -47,12 +47,13 @@ class HashRing:
     def randomKNodes(self, k):
         k           = min(k, self.activeNodeNum())
         nodes       = random.choices(self.activeNodes, k=k)
-        endpoints   = list(map(lambda node: node.endpoint, nodes))
-        return endpoints
+        return nodes
 
     def sequentialKNodes(self, key, k):
         keyLoc      = strHash(key) % self.ringSize
         nodeIndex   = self.findTargetNode(keyLoc)
+
+        k           = min(k, self.activeNodeNum())
         nodeIndices = [(nodeIndex + i)%self.activeNodeNum() for i in range(k)]
 
         return list(map(lambda index: self.activeNodes[index], nodeIndices))

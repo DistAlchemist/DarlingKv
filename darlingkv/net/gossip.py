@@ -6,6 +6,7 @@ from multiprocessing.connection import Client
 
 from darlingkv.common.ping import ping
 from darlingkv.config import netconfig
+from darlingkv.failure import failure
 from darlingkv.net.hashring import HashRing
 from darlingkv.net import rpc
 
@@ -19,27 +20,25 @@ class Gossip:
         self.config = netconfig
 
     def distributeInfo(self):
-        data = {'activeHosts': self.ring.nodeList, 'downHosts': self.ring.otherNodes}
-        return data
+        return self.ring.serialize()
 
     def deamon(self):
-        endpoints = self.ring.randomKNodes(self.config.gossipNum)
-        for endpoint in endpoints:
-            if not ping(node.address):
+        ringNodes = self.ring.randomKNodes(self.config.gossipNum)
+        for ringNode in ringNodes:
+            if not ping(ringNode.endpoint.address):
                 # process host failure
-                self.ring.removeNode(endpoint)
-            nodeInfo = self.pull(endpoint)
+                self.ring.removeNode(ringNode)
+                failure.failureHandle(ringNode)
+            serialNodes = self.pull(ringNodel.endpoint)
 
-            self.mergeInfo(nodeInfo)
+            self.mergeInfo(serialNodes)
 
     def pull(self, endpoint):
         address = (endpoint.address, self.port)
         c       = Client(address)
-        proxy   = rpc.RPCProxy(address)
+        proxy   = rpc.RPCProxy(c)
 
         return proxy.distributeInfo()
 
-    def mergeInfo(self, nodeInfo):
-        activeHosts = nodeInfo['activeHosts']
-        downHosts   = nodeInfo['downHosts']
-        self.ring.updateNodes(activeHosts, downHosts)
+    def mergeInfo(self, serialNodes):
+        self.ring.update(serialNodes)
