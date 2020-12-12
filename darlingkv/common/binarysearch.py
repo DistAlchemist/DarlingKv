@@ -1,5 +1,4 @@
 
-
 def binarySearch(arr, val, cmp):
     if len(arr) == 0:
         return None

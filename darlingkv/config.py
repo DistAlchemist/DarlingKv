@@ -49,6 +49,7 @@ class NetConfig:
         self.ringPort           = 9990 # aborted
         self.communicatePort    = 9992
         self.storePort          = 9991
+        self.kvPort             = 9993
 
 
 guiconfig = GUIConfig()

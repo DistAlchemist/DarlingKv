@@ -13,23 +13,21 @@ from darlingkv.config import repconfig
 # Replica is only responsible for the process of replicates data
 # at the insert time without watching and processing the failure 
 # of storage.
-def replica(key, value, timestamp, n):
+def replica(key):
     if repconfig.strategy == 'Rack Unaware':
-        rackUnAwareReplica(key, value, timestamp, n)
+        return rackUnAwareReplica(key, repconfig.replicaNum)
     elif repconfig.strategy == 'Rack Aware':
-        rackAwareReplica(key, value, timestamp, n)
+        return rackAwareReplica(key, repconfig.replicaNum)
     else:
         raise UnboundLocalError("Unkown Strategy")
 
 # replicate data by n copies
-def rackUnAwareReplica(key, value, timestamp, n):
+def rackUnAwareReplica(key, n):
     ring            = hashring.HashRing()
     replicaNodes    = ring.sequentialKNodes(key, n)
 
-    for node in replicaNodes:
-        c = Client((node.address, node.storePort))
-        proxy = rpc.RPCProxy(c)
-        proxy.insert(key, value, timestamp)
+    return list(map(lambda node: node.endpoint, replicaNodes))
+
 
 def rackAwareReplica(key, value, timestamp, n):
     pass

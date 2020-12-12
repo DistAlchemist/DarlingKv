@@ -1,5 +1,6 @@
 import hashlib
 
+
 def kvHash(data):
     hashValue = hashlib.md5(repr(data).encode('utf-8')).hexdigest()
 
